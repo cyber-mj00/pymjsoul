@@ -80,7 +80,7 @@ class MajsoulChannel():
                     print(e)
                     continue
 
-                msgClass = pb.reflection.MakeClass(msgDescriptor)
+                msgClass = pb.message_factory.GetMessageClass(msgDescriptor)
 
                 msg = msgClass()
                 msg.ParseFromString(data)
@@ -188,12 +188,12 @@ class MajsoulChannel():
         
         msgName = f'.{methodDescriptor.full_name}'
 
-        reqMessageClass = pb.reflection.MakeClass(methodDescriptor.input_type)
+        reqMessageClass = pb.message_factory.GetMessageClass(methodDescriptor.input_type)
         reqMessage = reqMessageClass(**msgFields)
 
         resData = await self.send(msgName, reqMessage.SerializeToString())
 
-        resMessageClass = pb.reflection.MakeClass(methodDescriptor.output_type)
+        resMessageClass = pb.message_factory.GetMessageClass(methodDescriptor.output_type)
         resMessage = resMessageClass()
         resMessage.ParseFromString(resData)
 
